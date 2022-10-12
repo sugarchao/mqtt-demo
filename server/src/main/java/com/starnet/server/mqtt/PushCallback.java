@@ -35,15 +35,15 @@ public class PushCallback implements MqttCallbackExtended {
     /**
      * 在这里处理接收到的消息。
      *
-     * @param s           消息主题
+     * @param topic           消息主题
      * @param mqttMessage 消息对象
      * @throws Exception
      */
     @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
         // 订阅之后的消息执行到这里
         String payload = new String(mqttMessage.getPayload());
-        log.info("主题：[{}]，内容: [{}]", s, payload);
+        log.info("主题：[{}]，内容: [{}]", topic, payload);
     }
 
     /**

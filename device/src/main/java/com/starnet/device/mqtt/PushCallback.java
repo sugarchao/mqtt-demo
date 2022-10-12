@@ -54,6 +54,7 @@ public class PushCallback implements MqttCallbackExtended {
                     client.getDeviceId().substring(Const.DEVICE_PREFIX.length());
             // 服务器发给当前设备的命令
             if (s.equals(deviceCmd)) {
+                //payload = "{\"deviceId\":\"iot/server/cmd/1\",\"cmdId\":\"1001\",\"cmd\":\"openDoor\",\"typeCode\":1,\"type\":\"sync\",\"msg\":\"test tcd0099\",\"respCode\":\"1\"}";
                 CmdPayload cmd = JSON.parseObject(payload, CmdPayload.class);
                 if (cmd.getTypeCode().equals(Const.CmdType.SYNC.getCode())) {
                     // 服务器发送过来的是同步命令，需要回复
@@ -105,7 +106,7 @@ public class PushCallback implements MqttCallbackExtended {
      */
     @Override
     public void connectionLost(Throwable throwable) {
-        log.error("连接断开，可以重连...");
+        log.error("连接断开，可以重连...", throwable);
     }
 
     /**

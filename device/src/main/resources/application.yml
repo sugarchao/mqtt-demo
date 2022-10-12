@@ -1,20 +1,21 @@
 server:
   servlet:
-    context-path: /device
+    context-path: /server
   port: 8091
 spring:
   redis:
-    host: 192.168.32.137
+    host: localhost
     port: 6379
-    password: 123456
+    password:
+    database: 12
 
 mqtt-properties:
-  host: tcp://192.168.11.163:1883
-  clientId: Device
-  username: mosquitto
-  password:
-  cleanSession: true
+  host: tcp://localhost:1883
+  clientId: Server
+  username: admin
+  password: admin
+  cleanSession: false
   connectionTimeout: 300
   keepAliveInterval: 60
   automaticReconnect: true
-
+  defaultQos: 0

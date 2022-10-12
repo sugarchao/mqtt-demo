@@ -1,8 +1,13 @@
 package com.starnet.device.service;
 
+import static com.starnet.device.common.Const.ON_OFF_LINE_TOPIC;
+
 import com.starnet.device.common.Const;
 import com.starnet.device.common.MqttProperties;
 import com.starnet.device.mqtt.MqttPushClient;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +27,8 @@ import java.util.concurrent.Semaphore;
 @Slf4j
 @Service
 public class DeviceService {
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final MqttProperties mqttProperties;
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -42,7 +49,7 @@ public class DeviceService {
     }
 
     public void deviceConnect(){
-        int totalClient = 20000;
+        int totalClient = 1;
         int threadNum = 200;
         final Semaphore semaphore = new Semaphore(threadNum);
         final CountDownLatch latch = new CountDownLatch(totalClient);
@@ -55,6 +62,7 @@ public class DeviceService {
                     try {
                         semaphore.acquire();
                         MqttPushClient client = new MqttPushClient(DeviceService.this, deviceId);
+                        client.publish(ON_OFF_LINE_TOPIC, "online time:" + formatter.format(LocalDateTime.now()));
                         semaphore.release();
                     } catch (InterruptedException e) {
                         log.error("线程异常：{}", e.toString());

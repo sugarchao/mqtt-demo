@@ -58,7 +58,7 @@ public class MqttPushClient {
             options.setConnectionTimeout(mqttProperties.getConnectionTimeout());
             options.setKeepAliveInterval(mqttProperties.getKeepAliveInterval());
             options.setAutomaticReconnect(mqttProperties.getAutomaticReconnect());
-            options.setWill(Const.DEVICE_WILL_TOPIC, "ServerOffline".getBytes(), 2, true);
+            options.setWill(Const.DEVICE_WILL_TOPIC, "ServerOffline".getBytes(), getQos(), true);
             // 将业务处理对象赋给回调类
             client.setCallback(new PushCallback(mqttService));
             client.connect(options);
@@ -67,8 +67,9 @@ public class MqttPushClient {
         }
     }
 
+
     public void publish(String topic, String data) {
-        publish(topic, data, 1, false);
+        publish(topic, data, getQos(), false);
     }
 
     public void publish(String topic, String data, Integer qos, Boolean retained){
@@ -87,7 +88,7 @@ public class MqttPushClient {
     }
 
     public void subscribe(String topic){
-        subscribe(topic, 1);
+        subscribe(topic, getQos());
     }
 
     public void subscribe(String topic, int qos){
@@ -110,5 +111,9 @@ public class MqttPushClient {
         } catch (MqttException e) {
             log.error("主动断开连接异常：{}", e.toString());
         }
+    }
+
+    private Integer getQos(){
+        return mqttProperties.getDefaultQos();
     }
 }

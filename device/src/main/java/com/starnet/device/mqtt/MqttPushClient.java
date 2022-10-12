@@ -65,7 +65,7 @@ public class MqttPushClient {
             options.setAutomaticReconnect(mqttProperties.getAutomaticReconnect());
             // 设置设备遗嘱
             String willMsg = "设备[" + deviceId + "]的遗嘱";
-            options.setWill(Const.DEVICE_WILL_TOPIC, willMsg.getBytes(), 2, true);
+            options.setWill(Const.DEVICE_WILL_TOPIC, willMsg.getBytes(), getQos(), true);
             // 将设备客户端赋给回调类
             client.setCallback(new PushCallback(mqttService, this));
             client.connect(options);
@@ -75,7 +75,7 @@ public class MqttPushClient {
     }
 
     public void publish(String topic, String data) {
-        publish(topic, data, 1, false);
+        publish(topic, data, getQos(), false);
     }
 
     public void publish(String topic, String data, Integer qos, Boolean retained){
@@ -94,7 +94,7 @@ public class MqttPushClient {
     }
 
     public void subscribe(String topic){
-        subscribe(topic, 1);
+        subscribe(topic, getQos());
     }
 
     public void subscribe(String topic, int qos){
@@ -126,5 +126,9 @@ public class MqttPushClient {
         } catch (MqttException e) {
             log.error("主动断开连接异常：{}", e.toString());
         }
+    }
+
+    private Integer getQos(){
+        return mqttProperties.getDefaultQos();
     }
 }

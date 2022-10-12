@@ -22,5 +22,6 @@ public class MqttProperties {
     private Integer connectionTimeout;
     private Integer keepAliveInterval;
     private Boolean automaticReconnect;
+    private Integer defaultQos;
 
 }
